@@ -1,11 +1,11 @@
 """Constants for integration_blueprint."""
 # Base component constants
-NAME = "Integration blueprint"
-DOMAIN = "integration_blueprint"
+NAME = "QuickMiner OCTune"
+DOMAIN = "nhqm_octune"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.1"
-ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
-ISSUE_URL = "https://github.com/custom-components/integration_blueprint/issues"
+ATTRIBUTION = "Implemented by Pascal Berski"
+ISSUE_URL = "https://github.com/pascalberski/ha-nhqm-octune/issues"
 
 # Icons
 ICON = "mdi:format-quote-close"
@@ -33,7 +33,7 @@ STARTUP_MESSAGE = f"""
 -------------------------------------------------------------------
 {NAME}
 Version: {VERSION}
-This is a custom integration!
+This is a custom integration by Pascal Berski!
 If you have any issues with this you need to open an issue here:
 {ISSUE_URL}
 -------------------------------------------------------------------
