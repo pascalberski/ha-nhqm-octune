@@ -25,6 +25,8 @@ I'm using the Excavator api (https://github.com/nicehash/excavator/tree/master/a
 	- GPU temperature
 	- Hotspot temperature
 	- VRAM temperature
+	- Fan speed in percent
+	- Fan speed in RPM
 - Sensors for the mining rig
 	- Hashrate (sum of all GPUs inside the rig)
 - Global sensors
