@@ -1,39 +1,40 @@
-"""Constants for integration_blueprint."""
-# Base component constants
-NAME = "QuickMiner OCTune"
-DOMAIN = "nhqm_octune"
+"""
+Constants for nhqm-octune
+"""
+
+from datetime import timedelta
+
+
+NAME = "NiceHash QuickMiner OCTune"
+DOMAIN = "octune"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.1"
-ATTRIBUTION = "Implemented by Pascal Berski"
+DEFAULT_NAME = "octune"
+
 ISSUE_URL = "https://github.com/pascalberski/ha-nhqm-octune/issues"
 
 # Icons
-ICON = "mdi:format-quote-close"
-
-# Device classes
-BINARY_SENSOR_DEVICE_CLASS = "connectivity"
+ICON_HASHRATE = "mdi:speedometer"
 
 # Platforms
-BINARY_SENSOR = "binary_sensor"
 SENSOR = "sensor"
-SWITCH = "switch"
-PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH]
-
+PLATFORMS = [SENSOR]
 
 # Configuration and options
-CONF_ENABLED = "enabled"
-CONF_USERNAME = "username"
-CONF_PASSWORD = "password"
+CONF_MINERS = "miners"
+CONF_HOST = "host"
+CONF_PORT = "port"
+CONF_AUTH = "auth"
+CONF_NAME = "name"
 
-# Defaults
-DEFAULT_NAME = DOMAIN
+REFRESH_INTERVAL = timedelta(seconds=10)
 
-
+# Startup
 STARTUP_MESSAGE = f"""
 -------------------------------------------------------------------
-{NAME}
+{NAME} by Pascal Berski (@pascalberski)
 Version: {VERSION}
-This is a custom integration by Pascal Berski!
+This is a custom integration!
 If you have any issues with this you need to open an issue here:
 {ISSUE_URL}
 -------------------------------------------------------------------

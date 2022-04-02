@@ -1,12 +1,14 @@
 {
   "domain": "octune",
-  "name": "OCTune",
+  "name": "NiceHash QuickMiner OCTune",
   "documentation": "https://github.com/pascalberski/ha-nhqm-octune",
-  "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/pascalberski/ha-nhqm-octune/issues",
+  "dependencies": [],
   "version": "0.0.1",
-  "config_flow": true,
   "codeowners": [
     "@pascalberski"
+  ],
+  "requirements": [
+    "httpx"
   ]
 }

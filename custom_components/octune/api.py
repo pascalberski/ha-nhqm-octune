@@ -1,75 +1,54 @@
-"""Sample API Client."""
+"""
+OCTune API interface
+"""
+import json
 import logging
-import asyncio
-import socket
-from typing import Optional
-import aiohttp
-import async_timeout
+import httpx
 
-TIMEOUT = 10
+_LOGGER = logging.getLogger(__name__)
 
+class OCTuneApiClient:
+    """ OCTune api interface """
+    def __init__(self, host, port, auth):
+        self.host = host
+        self.port = port
+        self.auth = auth
 
-_LOGGER: logging.Logger = logging.getLogger(__package__)
+    async def get_devices(self):
+        """ return the combinded json array """
+        devices = await self.get_devices_json()
+        workers = await self.get_workers_json()
 
-HEADERS = {"Content-type": "application/json; charset=UTF-8"}
+        for i in range(len(devices)):
+            for worker in workers:
+                if (worker.get("device_uuid") == devices[i].get("uuid")):
+                    devices[i]["algorithms"] = worker.get("algorithms")
+                    workers.remove(worker)
 
+        return devices
 
-class IntegrationBlueprintApiClient:
-    def __init__(
-        self, username: str, password: str, session: aiohttp.ClientSession
-    ) -> None:
-        """Sample API Client."""
-        self._username = username
-        self._password = password
-        self._session = session
+    async def get_devices_json(self):
+        """ get devices json array """
+        return (await self.request("GET", "/devices_cuda")).get("devices")
 
-    async def async_get_data(self) -> dict:
-        """Get data from the API."""
-        url = "https://jsonplaceholder.typicode.com/posts/1"
-        return await self.api_wrapper("get", url)
+    async def get_workers_json(self):
+        """ get workers json array """
+        return (await self.request("GET", "/workers")).get("workers")
 
-    async def async_set_title(self, value: str) -> None:
-        """Get data from the API."""
-        url = "https://jsonplaceholder.typicode.com/posts/1"
-        await self.api_wrapper("patch", url, data={"title": value}, headers=HEADERS)
+    async def request(self, method, path):
+        """ Request Helper """
+        async with httpx.AsyncClient() as client:
+            try:
+                url = "http://" + self.host + ":" + str(self.port) + path
+                _LOGGER.debug("http " + method + " request: " + url)
 
-    async def api_wrapper(
-        self, method: str, url: str, data: dict = {}, headers: dict = {}
-    ) -> dict:
-        """Get information from the API."""
-        try:
-            async with async_timeout.timeout(TIMEOUT):
-                if method == "get":
-                    response = await self._session.get(url, headers=headers)
-                    return await response.json()
+                response = None
+                if (method == "GET"):
+                    response = await client.get(url)
 
-                elif method == "put":
-                    await self._session.put(url, headers=headers, json=data)
-
-                elif method == "patch":
-                    await self._session.patch(url, headers=headers, json=data)
-
-                elif method == "post":
-                    await self._session.post(url, headers=headers, json=data)
-
-        except asyncio.TimeoutError as exception:
-            _LOGGER.error(
-                "Timeout error fetching information from %s - %s",
-                url,
-                exception,
-            )
-
-        except (KeyError, TypeError) as exception:
-            _LOGGER.error(
-                "Error parsing information from %s - %s",
-                url,
-                exception,
-            )
-        except (aiohttp.ClientError, socket.gaierror) as exception:
-            _LOGGER.error(
-                "Error fetching information from %s - %s",
-                url,
-                exception,
-            )
-        except Exception as exception:  # pylint: disable=broad-except
-            _LOGGER.error("Something really wrong happened! - %s", exception)
+                if response.status_code == 200:
+                    return response.json()
+                else:
+                    raise Exception("error while communication with api")
+            except Exception as exc:
+                _LOGGER.error(str(type(exc)))
