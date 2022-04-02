@@ -9,7 +9,11 @@ from homeassistant.helpers.entity import Entity
 from custom_components.octune.api import OCTuneApiClient
 
 from .const import (
+    ICON_FAN,
     ICON_HASHRATE,
+    ICON_TEMP,
+    ICON_TEMP_HOTSPOT,
+    ICON_TEMP_VRAM,
 )
 
 from .coordinators import SensorDataUpdateCoordinator
@@ -115,6 +119,11 @@ class TemperatureSensor(Sensor):
         """Sensor unit of measurement"""
         return "°C"
 
+    @property
+    def icon(self):
+        """Sensor icon"""
+        return ICON_TEMP
+
 
 class VramTemperatureSensor(Sensor):
     """
@@ -145,6 +154,11 @@ class VramTemperatureSensor(Sensor):
         """Sensor unit of measurement"""
         return "°C"
 
+    @property
+    def icon(self):
+        """Sensor icon"""
+        return ICON_TEMP_VRAM
+
 
 class HotspotTemperatureSensor(Sensor):
     """
@@ -174,6 +188,11 @@ class HotspotTemperatureSensor(Sensor):
     def unit_of_measurement(self):
         """Sensor unit of measurement"""
         return "°C"
+
+    @property
+    def icon(self):
+        """Sensor icon"""
+        return ICON_TEMP_HOTSPOT
 
 
 class HashrateSensor(Sensor):
@@ -209,6 +228,11 @@ class HashrateSensor(Sensor):
         """Sensor unit of measurement"""
         return "MH/s"
 
+    @property
+    def icon(self):
+        """Sensor icon"""
+        return ICON_HASHRATE
+
 class FanRpmSensor(Sensor):
     """
     displays fan rpm
@@ -242,6 +266,11 @@ class FanRpmSensor(Sensor):
         """Sensor unit of measurement"""
         return "RPM"
 
+    @property
+    def icon(self):
+        """Sensor icon"""
+        return ICON_FAN
+
 class FanSensor(Sensor):
     """
     displays fan speed in percent
@@ -274,3 +303,8 @@ class FanSensor(Sensor):
     def unit_of_measurement(self):
         """Sensor unit of measurement"""
         return "%"
+
+    @property
+    def icon(self):
+        """Sensor icon"""
+        return ICON_FAN
