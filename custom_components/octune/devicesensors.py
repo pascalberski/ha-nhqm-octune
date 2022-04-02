@@ -6,6 +6,8 @@ from time import sleep
 
 from homeassistant.helpers.entity import Entity
 
+from custom_components.octune.api import OCTuneApiClient
+
 from .const import (
     ICON_HASHRATE,
 )
@@ -66,7 +68,14 @@ class Sensor(Entity):
 
     def _get_data(self):
         try:
-            return self.coordinator.data
+            #_LOGGER.debug("coordinator.data: %s", self.coordinator.data)
+            devices = self.coordinator.data
+
+            for device in devices:
+                #_LOGGER.debug("comapre %s == %s = %s", device.get("uuid"), self.device.get("uuid"), (device.get("uuid") == self.device.get("uuid")))
+                if (device.get("uuid") == self.device.get("uuid")):
+                    #_LOGGER.debug("device: %s", device)
+                    return device
         except Exception as exc:
             _LOGGER.error("Unable to get api data\n%s", exc)
             return None
@@ -96,7 +105,8 @@ class TemperatureSensor(Sensor):
     @property
     def state(self):
         """Sensor state"""
-        value = float(self.device.get("gpu_temp"))
+        #_LOGGER.debug("data type: %s", str(type(self._get_data())))
+        value = float(self._get_data().get("gpu_temp"))
         self.log_updates(value)
         return value
 
@@ -126,7 +136,7 @@ class VramTemperatureSensor(Sensor):
     @property
     def state(self):
         """Sensor state"""
-        value = float(self.device.get("__vram_temp"))
+        value = float(self._get_data().get("__vram_temp"))
         self.log_updates(value)
         return value
 
@@ -156,7 +166,7 @@ class HotspotTemperatureSensor(Sensor):
     @property
     def state(self):
         """Sensor state"""
-        value = float(self.device.get("__hotspot_temp"))
+        value = float(self._get_data().get("__hotspot_temp"))
         self.log_updates(value)
         return value
 
@@ -190,7 +200,7 @@ class HashrateSensor(Sensor):
     @property
     def state(self):
         """Sensor state"""
-        value = round(float(self.device.get("algorithms")[0].get("speed"))/1000000, 2)
+        value = round(float(self._get_data().get("algorithms")[0].get("speed"))/1000000, 2)
         self.log_updates(value)
         return value
 
