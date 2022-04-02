@@ -8,6 +8,7 @@ from homeassistant.core import Config, HomeAssistant
 from custom_components.octune.api import OCTuneApiClient
 
 from .devicesensors import (
+    FanRpmSensor,
     HashrateSensor,
     HotspotTemperatureSensor,
     TemperatureSensor,
@@ -63,5 +64,9 @@ def create_device_sensors(coordinator, device):
         HotspotTemperatureSensor(coordinator, device),
         HashrateSensor(coordinator, device)
     ]
+
+    fans_len = len(device.get("fans"))
+    for i in range(fans_len):
+        sensors.append(FanRpmSensor(coordinator, i, device))
 
     return sensors
