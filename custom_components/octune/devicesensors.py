@@ -241,3 +241,36 @@ class FanRpmSensor(Sensor):
     def unit_of_measurement(self):
         """Sensor unit of measurement"""
         return "RPM"
+
+class FanSensor(Sensor):
+    """
+    displays fan speed in percent
+    """
+
+    def __init__(self, coordinator: SensorDataUpdateCoordinator, fanid: int, device=None):
+        super().__init__(coordinator, device)
+        self.fanid = fanid
+
+    @property
+    def name(self):
+        """Sensor name"""
+        device_name = self.device.get("name")
+        return f"{self.minername} {device_name} Fan {self.fanid} Speed"
+
+    @property
+    def unique_id(self):
+        """Unique entity id"""
+        device_uuid = self.device.get("uuid")
+        return f"octune:{device_uuid}:fanspeed:{self.fanid}"
+
+    @property
+    def state(self):
+        """Sensor state"""
+        value = float(self._get_data().get("fans")[self.fanid].get("current_level"))
+        self.log_updates(value)
+        return value
+
+    @property
+    def unit_of_measurement(self):
+        """Sensor unit of measurement"""
+        return "%"

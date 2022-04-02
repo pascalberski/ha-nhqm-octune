@@ -9,6 +9,7 @@ from custom_components.octune.api import OCTuneApiClient
 
 from .devicesensors import (
     FanRpmSensor,
+    FanSensor,
     HashrateSensor,
     HotspotTemperatureSensor,
     TemperatureSensor,
@@ -68,5 +69,6 @@ def create_device_sensors(coordinator, device):
     fans_len = len(device.get("fans"))
     for i in range(fans_len):
         sensors.append(FanRpmSensor(coordinator, i, device))
+        sensors.append(FanSensor(coordinator, i, device))
 
     return sensors
