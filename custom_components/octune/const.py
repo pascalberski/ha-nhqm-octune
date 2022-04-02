@@ -8,7 +8,7 @@ from datetime import timedelta
 NAME = "NiceHash QuickMiner OCTune"
 DOMAIN = "octune"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 DEFAULT_NAME = "octune"
 
 ISSUE_URL = "https://github.com/pascalberski/ha-nhqm-octune/issues"

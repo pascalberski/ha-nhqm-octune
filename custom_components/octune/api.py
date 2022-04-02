@@ -1,7 +1,6 @@
 """
 OCTune API interface
 """
-import json
 import logging
 import httpx
 
@@ -19,13 +18,26 @@ class OCTuneApiClient:
         devices = await self.get_devices_json()
         workers = await self.get_workers_json()
 
-        for i in range(len(devices)):
+        i = 0
+        for device in devices:
             for worker in workers:
-                if (worker.get("device_uuid") == devices[i].get("uuid")):
+                if (worker.get("device_uuid") == device.get("uuid")):
                     devices[i]["algorithms"] = worker.get("algorithms")
                     workers.remove(worker)
+            i += 1
 
         return devices
+
+    async def get_device_by_id(self, id):
+        """ return a device by id or uuid """
+        device = (await self.request("GET", "/api?command={\"id\":1,\"method\":\"device.get\",\"params\":[\"" + id + "\"]}")).get("device")
+        workers = await self.get_workers_json()
+
+        for worker in workers:
+            if (worker.get("device_uuid") == device.get("uuid")):
+                device["algorithms"] = worker.get("algorithms")
+
+        return device
 
     async def get_devices_json(self):
         """ get devices json array """
