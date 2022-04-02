@@ -3,13 +3,9 @@
   
 
 [![GitHub Release][releases-shield]][releases]
-
 [![GitHub Activity][commits-shield]][commits]
-
 [![License][license-shield]](LICENSE)
-
 ![Project Maintenance][maintenance-shield]
-
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
   
@@ -43,11 +39,15 @@ Request a new feature [here](https://github.com/pascalberski/ha-nhqm-octune/issu
 In order to be able to establish a connection between OCTune and Home Assistant, it must first be ensured that OCTune can be reached by other devices.
 
 1. **Open your Nice Hash Quick Miner config file.**
-	You can open the file via the Windows GUI as shown in the image below or directly via the file path: `C:\NiceHash\NiceHash QuickMiner\nhqm.conf`
+   
+   You can open the file via the Windows GUI as shown in the image below or directly via the file path: `C:\NiceHash\NiceHash QuickMiner\nhqm.conf`
+	
 	![openconfigfile][openconfigfileimg]
 2. **Change OCTune API host**
+
 	You have to find the parameter `watchDogAPIHost` and change it from `localhost` to `0.0.0.0`.
 3. **Restart**
+
 	Now you need to restart NH QuickMiner for the changes to take effect. *not just restart the Excavator*
 
 ### 2. Enable this Integration in HACS
