@@ -64,6 +64,7 @@ In order to be able to establish a connection between OCTune and Home Assistant,
 2. Insert this example and modify it.
 	```text
 	octune:
+	  refreshinterval: 60
 	  miners:
 	    - host: 192.168.178.10
 	      port: 18000
