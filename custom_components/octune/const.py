@@ -15,6 +15,10 @@ ISSUE_URL = "https://github.com/pascalberski/ha-nhqm-octune/issues"
 
 # Icons
 ICON_HASHRATE = "mdi:speedometer"
+ICON_FAN = "mdi:fan"
+ICON_TEMP_HOTSPOT = "mdi:thermometer-high"
+ICON_TEMP_VRAM = "mdi:thermometer-lines"
+ICON_TEMP = "mdi:thermometer"
 
 # Platforms
 SENSOR = "sensor"
