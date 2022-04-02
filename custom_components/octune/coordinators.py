@@ -1,6 +1,7 @@
 """
 sensor data update coordinator
 """
+from datetime import timedelta
 import logging
 
 from homeassistant.core import HomeAssistant
@@ -21,7 +22,7 @@ _LOGGER = logging.getLogger(__name__)
 class SensorDataUpdateCoordinator(DataUpdateCoordinator):
     """Manages fetching Status Data from octune api"""
 
-    def __init__(self, hass: HomeAssistant, client: OCTuneApiClient, host: str, port: int, auth: str, minername: str):
+    def __init__(self, hass: HomeAssistant, client: OCTuneApiClient, host: str, port: int, auth: str, minername: str, refresh_interval:timedelta):
         """Initialize"""
         self.name = f"{DOMAIN}_{host}_sensor_coordinator"
         self._client = client
@@ -31,7 +32,7 @@ class SensorDataUpdateCoordinator(DataUpdateCoordinator):
         self.minername = minername
 
         super().__init__(
-            hass, _LOGGER, name=self.name, update_interval=REFRESH_INTERVAL
+            hass, _LOGGER, name=self.name, update_interval=refresh_interval
         )
 
     async def _async_update_data(self):

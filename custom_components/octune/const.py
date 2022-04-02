@@ -2,7 +2,6 @@
 Constants for nhqm-octune
 """
 
-from datetime import timedelta
 
 
 NAME = "NiceHash QuickMiner OCTune"
@@ -31,7 +30,7 @@ CONF_PORT = "port"
 CONF_AUTH = "auth"
 CONF_NAME = "name"
 
-REFRESH_INTERVAL = timedelta(seconds=10)
+REFRESH_INTERVAL = "refreshinterval"
 
 # Startup
 STARTUP_MESSAGE = f"""

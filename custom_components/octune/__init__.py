@@ -5,12 +5,12 @@ For more details about this integration, please refer to
 https://github.com/pascalberski/ha-nhqm-octune
 """
 import logging
-import json
+from datetime import timedelta
 from homeassistant.core import Config, HomeAssistant
 from homeassistant.helpers import discovery
 from homeassistant.exceptions import PlatformNotReady
 
-from .const import CONF_HOST, CONF_NAME, CONF_PORT, CONF_AUTH, CONF_MINERS
+from .const import CONF_HOST, CONF_NAME, CONF_PORT, CONF_AUTH, CONF_MINERS, REFRESH_INTERVAL
 
 from .const import (
     DOMAIN,
@@ -34,6 +34,7 @@ async def async_setup(hass: HomeAssistant, config: Config):
     # Configuration
     #host = charger_config.get(CONF_HOST)
 
+    refresh_interval = timedelta(seconds=int(integration_config.get(REFRESH_INTERVAL)))
     miners = integration_config.get(CONF_MINERS)
     sensor_coordinators = []
 
@@ -46,7 +47,7 @@ async def async_setup(hass: HomeAssistant, config: Config):
         client = OCTuneApiClient(host, port, auth)
 
         _LOGGER.debug("initialising sensor coordinator %s - %s:%s - %s", minername, host, port, auth)
-        sensor_coordinator = SensorDataUpdateCoordinator(hass, client, host, port, auth, minername)
+        sensor_coordinator = SensorDataUpdateCoordinator(hass, client, host, port, auth, minername, refresh_interval)
         await sensor_coordinator.async_refresh()
 
         if not sensor_coordinator.last_update_success:
