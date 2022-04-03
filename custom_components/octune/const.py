@@ -20,6 +20,7 @@ ICON_FAN = "mdi:fan"
 ICON_TEMP_HOTSPOT = "mdi:thermometer-high"
 ICON_TEMP_VRAM = "mdi:thermometer-lines"
 ICON_TEMP = "mdi:thermometer"
+ICON_POWER = "mdi:power-plug"
 
 # Platforms
 SENSOR = "sensor"
