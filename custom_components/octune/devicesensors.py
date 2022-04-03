@@ -3,12 +3,14 @@ Sensors
 """
 import logging
 from time import sleep
+from unittest import result
 
 from homeassistant.helpers.entity import Entity
 
 from custom_components.octune.api import OCTuneApiClient
 
 from .const import (
+    ATTRIBUTION,
     ICON_FAN,
     ICON_HASHRATE,
     ICON_TEMP,
@@ -77,16 +79,29 @@ class Sensor(Entity):
 
             for device in devices:
                 #_LOGGER.debug("comapre %s == %s = %s", device.get("uuid"), self.device.get("uuid"), (device.get("uuid") == self.device.get("uuid")))
-                if (device.get("uuid") == self.device.get("uuid")):
+                if device.get("uuid") == self.device.get("uuid"):
                     #_LOGGER.debug("device: %s", device)
                     return device
         except Exception as exc:
             _LOGGER.error("Unable to get api data\n%s", exc)
             return None
-    
+
     def log_updates(self, value):
         """ Log new values """
         _LOGGER.debug("%s (%s, %s, %s): %s", str(type(self)), self.minername, self.device.get("uuid"), self.device.get("name"), value)
+
+    def _get_default_attributes(self, device_type):
+        results = {
+            "attribution": ATTRIBUTION,
+        }
+
+        if device_type == "GPU" or device_type == "RIG":
+            results["rig"] = self.minername
+            results["host"] = self.host
+        if device_type == "GPU":
+            results["uuid"] = self.device.get("uuid")
+
+        return results
 
 
 class TemperatureSensor(Sensor):
@@ -110,9 +125,9 @@ class TemperatureSensor(Sensor):
     def state(self):
         """Sensor state"""
         #_LOGGER.debug("data type: %s", str(type(self._get_data())))
-        value = float(self._get_data().get("gpu_temp"))
-        self.log_updates(value)
-        return value
+        self._state = float(self._get_data().get("gpu_temp"))
+        self.log_updates(self._state)
+        return self._state
 
     @property
     def unit_of_measurement(self):
@@ -123,6 +138,13 @@ class TemperatureSensor(Sensor):
     def icon(self):
         """Sensor icon"""
         return ICON_TEMP
+
+    @property
+    def device_state_attributes(self):
+        """Sensor device state attributes"""
+        results = self._get_default_attributes("GPU")
+        results["temperature"] = self._state
+        return results
 
 
 class VramTemperatureSensor(Sensor):
@@ -145,9 +167,9 @@ class VramTemperatureSensor(Sensor):
     @property
     def state(self):
         """Sensor state"""
-        value = float(self._get_data().get("__vram_temp"))
-        self.log_updates(value)
-        return value
+        self._state = float(self._get_data().get("__vram_temp"))
+        self.log_updates(self._state)
+        return self._state
 
     @property
     def unit_of_measurement(self):
@@ -158,6 +180,13 @@ class VramTemperatureSensor(Sensor):
     def icon(self):
         """Sensor icon"""
         return ICON_TEMP_VRAM
+
+    @property
+    def device_state_attributes(self):
+        """Sensor device state attributes"""
+        results = self._get_default_attributes("GPU")
+        results["vram temperature"] = self._state
+        return results
 
 
 class HotspotTemperatureSensor(Sensor):
@@ -180,9 +209,9 @@ class HotspotTemperatureSensor(Sensor):
     @property
     def state(self):
         """Sensor state"""
-        value = float(self._get_data().get("__hotspot_temp"))
-        self.log_updates(value)
-        return value
+        self._state = float(self._get_data().get("__hotspot_temp"))
+        self.log_updates(self._state)
+        return self._state
 
     @property
     def unit_of_measurement(self):
@@ -193,6 +222,13 @@ class HotspotTemperatureSensor(Sensor):
     def icon(self):
         """Sensor icon"""
         return ICON_TEMP_HOTSPOT
+
+    @property
+    def device_state_attributes(self):
+        """Sensor device state attributes"""
+        results = self._get_default_attributes("GPU")
+        results["hotspot temperature"] = self._state
+        return results
 
 
 class HashrateSensor(Sensor):
@@ -219,9 +255,13 @@ class HashrateSensor(Sensor):
     @property
     def state(self):
         """Sensor state"""
-        value = round(float(self._get_data().get("algorithms")[0].get("speed"))/1000000, 2)
-        self.log_updates(value)
-        return value
+        self._state = 0
+        try:
+            self._state = round(float(self._get_data().get("algorithms")[0].get("speed"))/1000000, 2)
+        except TypeError:
+            _LOGGER.debug("device not mining")
+        self.log_updates(self._state)
+        return self._state
 
     @property
     def unit_of_measurement(self):
@@ -232,6 +272,17 @@ class HashrateSensor(Sensor):
     def icon(self):
         """Sensor icon"""
         return ICON_HASHRATE
+
+    @property
+    def device_state_attributes(self):
+        """Sensor device state attributes"""
+        results = None
+        if (self.device is None):
+            results = self._get_default_attributes("RIG")
+        else:
+            results = self._get_default_attributes("GPU")
+        results["hashrate"] = self._state
+        return results
 
 class FanRpmSensor(Sensor):
     """
@@ -257,9 +308,9 @@ class FanRpmSensor(Sensor):
     @property
     def state(self):
         """Sensor state"""
-        value = float(self._get_data().get("fans")[self.fanid].get("current_rpm"))
-        self.log_updates(value)
-        return value
+        self._state = float(self._get_data().get("fans")[self.fanid].get("current_rpm"))
+        self.log_updates(self._state)
+        return self._state
 
     @property
     def unit_of_measurement(self):
@@ -270,6 +321,13 @@ class FanRpmSensor(Sensor):
     def icon(self):
         """Sensor icon"""
         return ICON_FAN
+
+    @property
+    def device_state_attributes(self):
+        """Sensor device state attributes"""
+        results = self._get_default_attributes("GPU")
+        results["rpm"] = self._state
+        return results
 
 class FanSensor(Sensor):
     """
@@ -295,9 +353,9 @@ class FanSensor(Sensor):
     @property
     def state(self):
         """Sensor state"""
-        value = float(self._get_data().get("fans")[self.fanid].get("current_level"))
-        self.log_updates(value)
-        return value
+        self._state = float(self._get_data().get("fans")[self.fanid].get("current_level"))
+        self.log_updates(self._state)
+        return self._state
 
     @property
     def unit_of_measurement(self):
@@ -308,3 +366,10 @@ class FanSensor(Sensor):
     def icon(self):
         """Sensor icon"""
         return ICON_FAN
+
+    @property
+    def device_state_attributes(self):
+        """Sensor device state attributes"""
+        results = self._get_default_attributes("GPU")
+        results["speed"] = self._state
+        return results
