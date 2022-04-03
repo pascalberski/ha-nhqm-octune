@@ -7,10 +7,12 @@ Constants for nhqm-octune
 NAME = "NiceHash QuickMiner OCTune"
 DOMAIN = "octune"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.3"
+VERSION = "0.0.4"
 DEFAULT_NAME = "octune"
 
 ISSUE_URL = "https://github.com/pascalberski/ha-nhqm-octune/issues"
+
+ATTRIBUTION = "Integration by Pascal Berski"
 
 # Icons
 ICON_HASHRATE = "mdi:speedometer"
