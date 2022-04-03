@@ -12,6 +12,7 @@ from .devicesensors import (
     FanSensor,
     HashrateSensor,
     HotspotTemperatureSensor,
+    OverheatingSensor,
     PowerSensor,
     TemperatureSensor,
     VramTemperatureSensor,
@@ -65,7 +66,8 @@ def create_device_sensors(coordinator, device):
         VramTemperatureSensor(coordinator, device),
         HotspotTemperatureSensor(coordinator, device),
         HashrateSensor(coordinator, device),
-        PowerSensor(coordinator, device)
+        PowerSensor(coordinator, device),
+        OverheatingSensor(coordinator, device)
     ]
 
     fans_len = len(device.get("fans"))

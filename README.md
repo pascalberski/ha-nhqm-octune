@@ -28,6 +28,7 @@ I'm using the Excavator api (https://github.com/nicehash/excavator/tree/master/a
 	- Fan speed in percent
 	- Fan speed in RPM
 	- Power usage
+	- Overheating
 - Sensors for the mining rig
 	- Hashrate (sum of all GPUs inside the rig)
 - Global sensors (all rigs together)
