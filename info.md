@@ -27,9 +27,10 @@ I'm using the Excavator api (https://github.com/nicehash/excavator/tree/master/a
 	- VRAM temperature
 	- Fan speed in percent
 	- Fan speed in RPM
+	- Power usage
 - Sensors for the mining rig
 	- Hashrate (sum of all GPUs inside the rig)
-- Global sensors
+- Global sensors (all rigs together)
 	- Hashrate (sum of all GPUs)
 
 Request a new feature [here](https://github.com/pascalberski/ha-nhqm-octune/issues/new?assignees=&labels=enhancement&template=feature_request.md).
