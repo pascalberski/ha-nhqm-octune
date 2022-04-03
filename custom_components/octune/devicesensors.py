@@ -13,6 +13,7 @@ from .const import (
     ATTRIBUTION,
     ICON_FAN,
     ICON_HASHRATE,
+    ICON_POWER,
     ICON_TEMP,
     ICON_TEMP_HOTSPOT,
     ICON_TEMP_VRAM,
@@ -373,3 +374,45 @@ class FanSensor(Sensor):
         results = self._get_default_attributes("GPU")
         results["speed"] = self._state
         return results
+
+class PowerSensor(Sensor):
+    """
+    displays power usage in watt
+    """
+
+    @property
+    def name(self):
+        """Sensor name"""
+        device_name = self.device.get("name")
+        return f"{self.minername} {device_name} Power"
+
+    @property
+    def unique_id(self):
+        """Unique entity id"""
+        device_uuid = self.device.get("uuid")
+        return f"octune:{device_uuid}:power"
+
+    @property
+    def state(self):
+        """Sensor state"""
+        self._state = float(self._get_data().get("gpu_power_usage"))
+        self.log_updates(self._state)
+        return self._state
+
+    @property
+    def unit_of_measurement(self):
+        """Sensor unit of measurement"""
+        return "W"
+
+    @property
+    def icon(self):
+        """Sensor icon"""
+        return ICON_POWER
+
+    @property
+    def device_state_attributes(self):
+        """Sensor device state attributes"""
+        results = self._get_default_attributes("GPU")
+        results["power"] = self._state
+        return results
+
