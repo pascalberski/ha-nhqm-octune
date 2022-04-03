@@ -13,6 +13,7 @@ from .const import (
     ATTRIBUTION,
     ICON_FAN,
     ICON_HASHRATE,
+    ICON_OVERHEATING,
     ICON_POWER,
     ICON_TEMP,
     ICON_TEMP_HOTSPOT,
@@ -416,3 +417,43 @@ class PowerSensor(Sensor):
         results["power"] = self._state
         return results
 
+class OverheatingSensor(Sensor):
+    """
+    displays if a gpu overheats
+    """
+
+    @property
+    def name(self):
+        """Sensor name"""
+        device_name = self.device.get("name")
+        return f"{self.minername} {device_name} Overheating"
+
+    @property
+    def unique_id(self):
+        """Unique entity id"""
+        device_uuid = self.device.get("uuid")
+        return f"octune:{device_uuid}:overheating"
+
+    @property
+    def state(self):
+        """Sensor state"""
+        self._state = bool(self._get_data().get("too_hot"))
+        self.log_updates(self._state)
+        return self._state
+
+    @property
+    def unit_of_measurement(self):
+        """Sensor unit of measurement"""
+        return None
+
+    @property
+    def icon(self):
+        """Sensor icon"""
+        return ICON_OVERHEATING
+
+    @property
+    def device_state_attributes(self):
+        """Sensor device state attributes"""
+        results = self._get_default_attributes("GPU")
+        results["overheating"] = self._state
+        return results
